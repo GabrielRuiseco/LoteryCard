@@ -1,11 +1,13 @@
 package com.example.myapplication.ui.loteryCard;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -55,16 +57,21 @@ public class CardFragment extends Fragment {
     private ArrayList<LoteryCard> myCard = new ArrayList<>();
     private ArrayList<LoteryCard> cartas = new ArrayList<>();
     private ArrayList<LoteryCard> cheked = new ArrayList<>();
+    private ArrayList<Integer> numbers = new ArrayList<>();
     private RecyclerView recyclerView;
     private Random aleatory = new Random(System.currentTimeMillis());
     ImageView card;
     int cnum;
     CardAdapter cardAdapter;
     LoteryCard edcard;
-    //    Drawable check = getActivity().getDrawable(R.drawable.ic_checked_foreground);
+    //    Drawable check = getContext().getDrawable(R.drawable.ic_checked_foreground);
     int array[] = new int[16];
     Button btnr;
     int count = 0;
+    Context context;
+    int x = 0;
+    CardView cardView;
+    TextView txw;
 
 
     // TODO: Rename and change types of parameters
@@ -73,6 +80,10 @@ public class CardFragment extends Fragment {
 
     public CardFragment() {
         // Required empty public constructor
+    }
+
+    public CardFragment(Context cntx) {
+        this.context = cntx;
     }
 
     /**
@@ -112,6 +123,9 @@ public class CardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        cardView = view.findViewById(R.id.cardv);
+        txw = view.findViewById(R.id.textView3);
+        txw.setVisibility(View.INVISIBLE);
         card = view.findViewById(R.id.imageView2);
         btnr = view.findViewById(R.id.reset);
         btnr.setEnabled(false);
@@ -120,28 +134,16 @@ public class CardFragment extends Fragment {
             public void onClick(View view) {
                 generateCard();
                 card.setEnabled(true);
+                btnr.setEnabled(false);
+                cardView.setVisibility(View.VISIBLE);
+                txw.setVisibility(View.INVISIBLE );
             }
         });
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cnum = (int) (Math.random() * (55 - 1) + 1);
-                card.setImageResource(cartas.get(cnum - 1).getPicture());
-                for (int i = 0; i < myCard.size(); i++) {
-                    if (myCard.get(i).getNumber() == cnum) {
-                        CardAdapter.ViewHolderCard holder = ((CardAdapter) recyclerView.getAdapter()).getViewByPosition(i);
-                        View v = holder.itemView;
-                        ImageView imgcard = v.findViewById(R.id.imgcard);
-                        imgcard.setImageResource(R.drawable.ic_1elgallo);
-                        if (cheked.get(i).getNumber() == cnum) {
-                            cheked.remove(i);
-                            count++;
-                        }
-                    }
-                }
-                if (count == 16) {
-                    winer();
-                }
+                getCard(view);
+//                check();
             }
         });
         recyclerView = view.findViewById(R.id.rvcard);
@@ -230,6 +232,28 @@ public class CardFragment extends Fragment {
         Toast.makeText(getContext(), "Completed", Toast.LENGTH_SHORT).show();
         card.setEnabled(false);
         btnr.setEnabled(true);
+        cardView.setVisibility(View.INVISIBLE);
+        txw.setVisibility(View.VISIBLE);
+    }
+    private void check(){
+        card.setImageResource(cartas.get(cnum - 1).getPicture());
+        for (int j = 0; j < cheked.size(); j++) {
+            if (cheked.get(j).getNumber() == cartas.get(cnum - 1).getNumber()) {
+                cheked.remove(j);
+            }
+        }
+        for (int i = 0; i < myCard.size(); i++) {
+            if (myCard.get(i).getNumber() == cnum) {
+                CardAdapter.ViewHolderCard holder = ((CardAdapter) recyclerView.getAdapter()).getViewByPosition(i);
+                View v = holder.itemView;
+                ImageView imgcard = v.findViewById(R.id.imgcard);
+                imgcard.setImageResource(R.drawable.ic_imggot);
+                count++;
+            }
+        }
+        if (cheked.size() == 0) {
+            winer();
+        }
     }
 
     private void getCard(final View v) {
@@ -239,21 +263,28 @@ public class CardFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
                     cnum = response.getInt("numero");
-                    card.setImageResource(cartas.get(cnum - 1).getPicture());
-                    for (int i = 0; i < myCard.size(); i++) {
-                        if (myCard.get(i).getNumber() == cnum) {
-                            CardAdapter.ViewHolderCard holder = ((CardAdapter) recyclerView.getAdapter()).getViewByPosition(i);
-                            View v = holder.itemView;
-                            ImageView imgcard = v.findViewById(R.id.imgcard);
-                            imgcard.setImageResource(R.drawable.ic_1elgallo);
-                            if (cheked.get(i).getNumber() == cnum) {
-                                cheked.remove(i);
+                    if (!numbers.contains(cnum)){
+                        numbers.add(cnum);
+                        card.setImageResource(cartas.get(cnum - 1).getPicture());
+                        for (int j = 0; j < cheked.size(); j++) {
+                            if (cheked.get(j).getNumber() == cartas.get(cnum - 1).getNumber()) {
+                                cheked.remove(j);
+                            }
+                        }
+                        for (int i = 0; i < myCard.size(); i++) {
+                            if (myCard.get(i).getNumber() == cnum) {
+                                CardAdapter.ViewHolderCard holder = ((CardAdapter) recyclerView.getAdapter()).getViewByPosition(i);
+                                View v = holder.itemView;
+                                ImageView imgcard = v.findViewById(R.id.imgcard);
+                                imgcard.setImageResource(R.drawable.ic_imggot);
                                 count++;
                             }
                         }
-                    }
-                    if (count == 16) {
-                        winer();
+                        if (cheked.size() == 0) {
+                            winer();
+                        }
+                    }else{
+                        getCard(v);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -1,7 +1,7 @@
 package com.example.myapplication.clases;
 
 public class Token {
-    private static String token;
+    private static String token="void";
 
     public static void setToken(String tk) {
         Token.token = tk;

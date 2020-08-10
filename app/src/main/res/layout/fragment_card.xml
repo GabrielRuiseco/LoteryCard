@@ -12,6 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="300dp"
+            android:text="WINNER"
+            android:textColor="@color/color9"
+            android:textSize="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="58dp"
@@ -25,6 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardv"
             android:layout_width="250dp"
             android:layout_height="480dp"
             android:layout_marginTop="20dp"
@@ -45,6 +58,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -53,11 +67,11 @@
             android:id="@+id/curcard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="80dp"
             android:text="Current Card"
-            android:textSize="36dp"
             android:textColor="@color/color9"
+            android:textSize="36dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -71,15 +85,6 @@
             android:background="@drawable/btn_one"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-<!--        <Button-->
-<!--            android:id="@+id/buttontoken"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="63dp"-->
-<!--            android:text="Button"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/reset"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

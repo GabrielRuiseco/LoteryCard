@@ -115,8 +115,8 @@ public class LoginFragment extends Fragment {
             data.put("client_id", 6);
             data.put("client_secret", "otuoWd9Zyukpu8WRItXxicoLlpfXbOYAX0zv4tEu");
             data.put("grant_type", "password");
-            data.put("username", et_mail.getText());//19170012@utt.edu.mx
-            data.put("password", et_pass.getText());//123password
+            data.put("username", et_mail.getText().toString());//19170012@utt.edu.mx
+            data.put("password", et_pass.getText().toString());//123password
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -124,15 +124,12 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    JSONObject token = response.getJSONObject("token");
-                    Toast.makeText(getContext(),response.toString(),Toast.LENGTH_LONG).show();
-                    Log.d("Token", response.toString());
-                    Token.setToken(response.getString("access_token"));
-//                    Navigation.findNavController(getView()).navigate(R.id.cardFragment);
+                    String token = response.getString("access_token");
+                    Token.setToken(token);
                 } catch (JSONException e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
-                if (response != null) {
+                if (Token.getToken().length() > 0) {
                     Toast.makeText(getContext(), "Success" + response.toString(), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
